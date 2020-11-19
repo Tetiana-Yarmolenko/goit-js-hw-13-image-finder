@@ -1,0 +1,111 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: mediumspringgreen;
+}
+
+/* img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+} */
+/* .search-form {
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  margin-bottom: 24px;
+}
+
+.load-more {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  width: 100px;
+  height: 35px;
+  border: none;
+  border-radius: 5px;
+  background-color: cyan;
+  color: black;
+}
+
+/* input {
+  border-radius: 5px;
+  width: 500px;
+  height: 40px;
+  background-color: gainsboro;
+} */
+
+/* .article {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.name {
+  width: 1200px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.country-characteristics {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+
+.img-flag {
+  width: 600px;
+  display: flex;
+  justify-content: center;
+}
+
+.langs,
+.population,
+.capital {
+  width: 250px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.langs {
+  padding: 0 0 15px 0;
+}
+
+.name-country {
+  font-size: 50px;
+  list-style: none;
+  text-align: center;
+}
+
+.lang-item:not(:last-child) {
+  margin-bottom: 10px;
+}
+/* для розмітки списку країн */
+/* .country-item {
+  font-size: 25px;
+  color: brown;
+}
+
+.country-item:not(:last-child) {
+  margin-bottom: 10px;
+} */
