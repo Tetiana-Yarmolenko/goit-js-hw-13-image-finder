@@ -13,12 +13,16 @@
 <body>
 <form class="search-form" id="search-form">
   <input type="text" name="query" autocomplete="off" placeholder="Search images..." class="search-input" />
-  <input type="submit" class='submit'>
+  <button type="submit" class="search-form__btn">Search</button>
 </form>
 <!-- Список <li> с карточками изображений -->
 <ul class="gallery"></ul>
-<button class="load-more none">Load More</button>
- 
+
+<div id="sentinel"></div>
+<button type="button" class="btn is-hidden" data-action="load-more">
+  <span class="label">Load-more</span>
+</button>
+
 </body>
 
 </html>

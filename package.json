@@ -8,7 +8,7 @@
     "build": "webpack --env.mode production --config ./webpack/config.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "server" : "json-server --watch bd.json -p 4041 -d 300"
+    "server": "json-server --watch bd.json -p 4041 -d 300"
   },
   "repository": {
     "type": "git",
@@ -55,6 +55,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "handlebars": "^4.7.6",
+    "infinite-scroll": "^3.0.6",
     "lodash.debounce": "^4.0.8"
   }
 }
