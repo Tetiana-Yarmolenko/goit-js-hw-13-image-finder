@@ -1,10 +1,17 @@
 import './styles.css';
 import "@pnotify/core/dist/PNotify.css";
 import "@pnotify/core/dist/BrightTheme.css";
+import debounce from 'lodash.debounce';
+
+import * as basicLightbox from 'basiclightbox'
+import 'basiclightbox/dist/basicLightbox.min.css';
+
+
 
 import NewsApiService from './js/apiService.js'
 import imagesTpl from '../tamplate/gallery.hbs';
 import LoadMoreBtn from './js/load-more-btn';
+import getRefs from './js/get-refs'
 
 const { error, success } = require('@pnotify/core');
 
@@ -17,33 +24,30 @@ const loadMoreBtn = new LoadMoreBtn({
   hidden: true,
 });
 
+// розмітка сторінки html
 const refs = getRefs();
 
-function getRefs() {
-    return {
-        searchForm: document.querySelector('#search-form'),
-        gallery: document.querySelector('.gallery'),
-        sentinel: document.querySelector('#sentinel'),
-    };
-   }
+
 
 // додаємо слухачів події
-refs.searchForm.addEventListener('submit', onSearch);
+// refs.searchForm.addEventListener('submit', onSearch);
 // loadMoreBtn.refs.button.addEventListener('click', fetchImage);
-
-
+refs.input.addEventListener('input', debounce(onSearch, 500));
+refs.gallery.addEventListener('click', onGalleryElClick);
 
 function onSearch(e) {
     e.preventDefault();
     
     clearGallery();
-    newsApiService.query = e.currentTarget.elements.query.value;
+    // для форми sabmit
+    // newsApiService.query = e.currentTarget.elements.query.value;
+    // для input
+    newsApiService.query = e.target.value.trim();
     if (newsApiService.query === '') {
         return error({
         title: 'Oh No!',
         text: 'Something terrible happened.',
-        delay: 2000,
-          
+        delay: 2000,  
         });
     }
     loadMoreBtn.show();
@@ -105,3 +109,14 @@ observer.observe(refs.sentinel);
 //     console.log(error);
 //   }
 // }
+
+function onGalleryElClick(event) {
+ 
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+  const changeModalImage = `<img src=${event.target.dataset.source} alt="icon" />`;
+  const instance = basicLightbox.create(changeModalImage);
+
+  instance.show();
+}
