@@ -7,7 +7,6 @@ import * as basicLightbox from 'basiclightbox'
 import 'basiclightbox/dist/basicLightbox.min.css';
 
 
-
 import NewsApiService from './js/apiService.js'
 import imagesTpl from '../tamplate/gallery.hbs';
 import LoadMoreBtn from './js/load-more-btn';
