@@ -9,24 +9,29 @@ import 'basiclightbox/dist/basicLightbox.min.css';
 
 import NewsApiService from './js/apiService.js'
 import imagesTpl from '../tamplate/gallery.hbs';
-import LoadMoreBtn from './js/load-more-btn';
+// import LoadMoreBtn from './js/load-more-btn';
 import getRefs from './js/get-refs'
 
 const { error, success } = require('@pnotify/core');
+
 
 // екземпляр класу APi запиту
 const newsApiService = new NewsApiService();
 
 // екземпляр класу кнопки LoadMoreBtn
-const loadMoreBtn = new LoadMoreBtn({
-  selector: '[data-action="load-more"]',
-  hidden: true,
-});
+// const loadMoreBtn = new LoadMoreBtn({
+//   selector: '[images-action="load-more"]',
+//   hidden: true,
+// });
 
 // розмітка сторінки html
 const refs = getRefs();
 
 
+const options = {
+    rootMargin: '100px'
+}
+const observer = new IntersectionObserver (onEntry, options);
 
 // додаємо слухачів події
 // refs.searchForm.addEventListener('submit', onSearch);
@@ -37,7 +42,7 @@ refs.gallery.addEventListener('click', onGalleryElClick);
 function onSearch(e) {
     e.preventDefault();
     
-    clearGallery();
+    // clearGallery();
     // для форми sabmit
     // newsApiService.query = e.currentTarget.elements.query.value;
     // для input
@@ -49,26 +54,38 @@ function onSearch(e) {
         delay: 2000,  
         });
     }
-    loadMoreBtn.show();
+    // loadMoreBtn.show();
     newsApiService.resetPage();
     clearGallery();
     fetchImage();    
 }
 
+function foo(images) {
+    console.log(images);
+     
 
+    if (newsApiService.img < images.totalHits) {
+        observer.observe(refs.sentinel);
+        renderMarkup(images.hits);
+        newsApiService.img += 12;
+    }  
+    if (newsApiService.img === images.totalHits) {
+        observer.unobserve(refs.sentinel);
+        return;
+    }
+    if (newsApiService.img + 12 > images.totalHits) {
+        observer.unobserve(refs.sentinel);
+    }
+    }
 
 function fetchImage() {
-    loadMoreBtn.disable();
-    newsApiService.fetchImage().then(images => {
-        renderMarkup(images);
-        // scrollPage();
-        loadMoreBtn.enable();
-    });
+    // loadMoreBtn.disable();
+    newsApiService.fetchImage().then(foo);
 }
 
 // функкія рендеру розмітки
-function renderMarkup(image) {
-  refs.gallery.insertAdjacentHTML('beforeend', imagesTpl(image));
+function renderMarkup(data) {
+  refs.gallery.insertAdjacentHTML('beforeend', imagesTpl(data));
 }
 
 // функція очистки розмітки
@@ -76,25 +93,22 @@ function clearGallery() {
     refs.gallery.innerHTML = '';
 }
 
+
+
 // скрол сторінки
-const onEntry = entries => {
+function onEntry (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting && newsApiService.query !== '') {
             console.log("LOADING...");
-            newsApiService.fetchImage().then(images => {
-                renderMarkup(images);
-                newsApiService.incrementPage();
-            });
+            newsApiService.fetchImage().then(foo);
         }
     });
 }
 
-const options = {
-    rootMargin: '100px'
-}
 
-const observer = new IntersectionObserver(onEntry, options);
-observer.observe(refs.sentinel);
+
+
+// observer.observe(refs.sentinel);
 // function scrollPage() {
 //   try {
 //     setTimeout(() => {
@@ -114,7 +128,7 @@ function onGalleryElClick(event) {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-  const changeModalImage = `<img src=${event.target.dataset.source} alt="icon" />`;
+  const changeModalImage = `<img src=${event.target.imagesset.source} alt="icon" />`;
   const instance = basicLightbox.create(changeModalImage);
 
   instance.show();
