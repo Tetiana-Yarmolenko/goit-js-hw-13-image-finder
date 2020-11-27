@@ -27,7 +27,7 @@ const newsApiService = new NewsApiService();
 // розмітка сторінки html
 const refs = getRefs();
 
-
+// дані для методу observer
 const options = {
     rootMargin: '100px'
 }
@@ -42,9 +42,9 @@ refs.gallery.addEventListener('click', onGalleryElClick);
 function onSearch(e) {
     e.preventDefault();
     
-    // clearGallery();
     // для форми sabmit
     // newsApiService.query = e.currentTarget.elements.query.value;
+    
     // для input
     newsApiService.query = e.target.value.trim();
     if (newsApiService.query === '') {
@@ -60,10 +60,7 @@ function onSearch(e) {
     fetchImage();    
 }
 
-function foo(images) {
-    console.log(images);
-     
-
+function addImages(images) {
     if (newsApiService.img < images.totalHits) {
         observer.observe(refs.sentinel);
         renderMarkup(images.hits);
@@ -80,12 +77,12 @@ function foo(images) {
 
 function fetchImage() {
     // loadMoreBtn.disable();
-    newsApiService.fetchImage().then(foo);
+    newsApiService.fetchImage().then(addImages);
 }
 
 // функкія рендеру розмітки
-function renderMarkup(data) {
-  refs.gallery.insertAdjacentHTML('beforeend', imagesTpl(data));
+function renderMarkup(images) {
+  refs.gallery.insertAdjacentHTML('beforeend', imagesTpl(images));
 }
 
 // функція очистки розмітки
@@ -94,21 +91,30 @@ function clearGallery() {
 }
 
 
-
 // скрол сторінки
 function onEntry (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting && newsApiService.query !== '') {
             console.log("LOADING...");
-            newsApiService.fetchImage().then(foo);
+            newsApiService.fetchImage().then(addImages);
         }
     });
 }
 
 
+// Модальне вікно
+function onGalleryElClick(event) {
+ 
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+    const changeModalImage = `<img src=${event.target.dataset.source} alt="icon" />`;
+  const instance = basicLightbox.create(changeModalImage);
+
+  instance.show();
+}
 
 
-// observer.observe(refs.sentinel);
 // function scrollPage() {
 //   try {
 //     setTimeout(() => {
@@ -122,14 +128,3 @@ function onEntry (entries) {
 //     console.log(error);
 //   }
 // }
-
-function onGalleryElClick(event) {
- 
-  if (event.target.nodeName !== 'IMG') {
-    return;
-  }
-  const changeModalImage = `<img src=${event.target.imagesset.source} alt="icon" />`;
-  const instance = basicLightbox.create(changeModalImage);
-
-  instance.show();
-}
